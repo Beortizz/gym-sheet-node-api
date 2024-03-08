@@ -1,0 +1,49 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Student {
+  id            Int             @id @default(autoincrement())
+  name          String
+  email         String          @unique
+  weight        Float
+  height        Float
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  TrainingSheet TrainingSheet[]
+}
+
+model TrainingSheet {
+  id                    Int                     @id @default(autoincrement())
+  student               Student                 @relation(fields: [studentId], references: [id])
+  studentId             Int
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  ExerciseTrainingSheet ExerciseTrainingSheet[]
+}
+
+model Exercise {
+  id                    Int                     @id @default(autoincrement())
+  name                  String                  @unique
+  muscleGroup           String
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  ExerciseTrainingSheet ExerciseTrainingSheet[]
+}
+
+model ExerciseTrainingSheet {
+  id              Int           @id @default(autoincrement())
+  exercise        Exercise      @relation(fields: [exerciseId], references: [id])
+  exerciseId      Int
+  trainingSheet   TrainingSheet @relation(fields: [trainingSheetId], references: [id])
+  trainingSheetId Int
+  repetitions     Int
+  series          Int
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
