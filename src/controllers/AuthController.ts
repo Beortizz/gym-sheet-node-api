@@ -16,8 +16,6 @@ export const register = async (request: Request, response: Response) => {
     });
     const token = generateToken(user.id);
     response.json({ user, token });
-
-    response.json(user);
 }
 
 export const login = async (request: Request, response: Response) => {

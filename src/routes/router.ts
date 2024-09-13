@@ -14,7 +14,8 @@ router.post("/login", AuthController.login);
 router.post("/register", AuthController.register);
 
 routerWithAuth.use(authenticateToken);
-routerWithAuth.get("/students", authenticateToken, StudentController.getStudents);
+router.use("", routerWithAuth);
+routerWithAuth.get("/students", StudentController.getStudents);
 routerWithAuth.get("/students/:id", StudentController.getStudent);
 routerWithAuth.post("/students", StudentController.createStudent);
 routerWithAuth.put("/students/:id", StudentController.updateStudent);
@@ -31,8 +32,6 @@ routerWithAuth.get("/training-sheets/:id", TrainingSheetController.getTrainingSh
 routerWithAuth.post("/training-sheets", TrainingSheetController.createTrainingSheet);
 routerWithAuth.put("/training-sheets/:id", TrainingSheetController.updateTrainingSheet);
 routerWithAuth.delete("/training-sheets/:id", TrainingSheetController.deleteTrainingSheet);
-
-
 
 
 export default router;
