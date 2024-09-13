@@ -3,9 +3,27 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export function getStudents(request: Request, response: Response) {
-
-    prisma.student.findMany().then((student) => {
-        response.json(student);
+    prisma.student.findMany({
+        include: {
+            TrainingSheet: {
+                include: {
+                    ExerciseTrainingSheet: {
+                        select: {
+                            series: true,
+                            repetitions: true,
+                            exercise: true
+                        }
+                    }
+                }
+            }
+        }
+    })
+    .then((students) => {
+        response.json({ students });
+    })
+    .catch((error) => {
+        console.error(error);
+        response.status(500).json({ error: 'An error occurred while retrieving students.' });
     });
 }
 
