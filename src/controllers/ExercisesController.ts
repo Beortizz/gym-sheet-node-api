@@ -1,5 +1,8 @@
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
+import { createExerciseSchema } from '../schemas/createExercise';
+import { updateExerciseSchema } from '../schemas/updateExercise';
+import { create } from 'domain';
 const prisma = new PrismaClient();
 
 export function getExercises(request: Request, response: Response) {
@@ -20,7 +23,7 @@ export function getExercise(request: Request, response: Response) {
 }
 
 export function createExercise(request: Request, response: Response) {
-    const { name, muscleGroup } = request.body;
+    const { name, muscleGroup } = createExerciseSchema.parse(request.body);
   
     prisma.exercise.create({
         data: {
@@ -37,7 +40,7 @@ export function createExercise(request: Request, response: Response) {
 
 export function updateExercise(request: Request, response: Response) {
     const id = request.params.id;
-    const { name, muscleGroup } = request.body;
+    const { name, muscleGroup } = updateExerciseSchema.parse(request.body);
     prisma.exercise.update({
         where: {
             id: parseInt(id)

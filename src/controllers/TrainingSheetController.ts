@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
+import { createTrainingSheetSchema } from '../schemas/createTrainingSheet';
+import { updateTrainingSheetSchema } from '../schemas/updateTrainingSheet';
 
 const prisma = new PrismaClient();
 
@@ -59,13 +61,13 @@ export function getTrainingSheet(request: Request, response: Response) {
 
 
 export function createTrainingSheet(request: Request, response: Response) {
-    const { studentId, exercises }: { studentId: number, exercises: ExerciseInput[] } = request.body;
+    const { studentId, exercises } = createTrainingSheetSchema.parse(request.body);
 
     prisma.trainingSheet.create({
         data: {
             studentId,
             ExerciseTrainingSheet: {
-                create: exercises.map((exercise: ExerciseInput) => ({
+                create: exercises.map((exercise) => ({
                     exerciseId: exercise.exerciseId,
                     series: exercise.series,
                     repetitions: exercise.repetitions,
@@ -84,7 +86,7 @@ export function createTrainingSheet(request: Request, response: Response) {
 
 export async function updateTrainingSheet(request: Request, response: Response) {
     const id = parseInt(request.params.id); 
-    const { studentId, exercises } = request.body;
+    const { studentId, exercises } = updateTrainingSheetSchema.parse(request.body);
 
     try {
         const trainingSheet = await prisma.trainingSheet.update({
