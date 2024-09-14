@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
+import { createStudentSchema } from "../schemas/createStudent";
+import { updateStudentSchema } from "../schemas/updateStudent";
 const prisma = new PrismaClient();
 
 export function getStudents(request: Request, response: Response) {
@@ -18,13 +20,13 @@ export function getStudents(request: Request, response: Response) {
             }
         }
     })
-    .then((students) => {
-        response.json({ students });
-    })
-    .catch((error) => {
-        console.error(error);
-        response.status(500).json({ error: 'An error occurred while retrieving students.' });
-    });
+        .then((students) => {
+            response.json({ students });
+        })
+        .catch((error) => {
+            console.error(error);
+            response.status(500).json({ error: 'An error occurred while retrieving students.' });
+        });
 }
 
 export function getStudent(request: Request, response: Response) {
@@ -39,13 +41,14 @@ export function getStudent(request: Request, response: Response) {
 }
 
 export function createStudent(request: Request, response: Response) {
-    const { name, email, weight, height } = request.body;
-  
+
+    const { name, email, weight, height } = createStudentSchema.parse(request.body);
+
     prisma.student.create({
         data: {
-            name, 
-            email, 
-            weight, 
+            name,
+            email,
+            weight,
             height
         }
     }).then((student) => {
@@ -59,7 +62,7 @@ export function createStudent(request: Request, response: Response) {
 
 export function updateStudent(request: Request, response: Response) {
     const id = request.params.id;
-    const { name, email, weight, height } = request.body;
+    const { name, email, weight, height } = updateStudentSchema.parse(request.body);
     prisma.student.update({
         where: {
             id: parseInt(id)
