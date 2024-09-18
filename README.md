@@ -37,11 +37,6 @@ cd nome-do-repositorio
 npm install
 ```
 
-2. **Instale as Dependências**
-```bash
-npm install
-```
-
 3. **Configure o ambiente**
  - Crie um arquivo chamado .env
  - Atualize as seguintes variaveis 
