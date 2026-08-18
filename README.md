@@ -56,3 +56,17 @@ npm run dev
 ```
 
 ## Tudo Pronto, agora só fazer requisições para localhost:3000
+
+## Rodando com Docker
+
+Pré-requisito: [Docker](https://www.docker.com/) e Docker Compose.
+
+1. Suba os containers:
+```bash
+docker compose up -d
+```
+2. O container `app` roda `npx prisma migrate deploy` automaticamente antes de iniciar (`npm run dev`).
+3. Variáveis de ambiente (`DATABASE_URL`, `JWT_SECRET`) já vêm configuradas no `docker-compose.yml`; ajuste via variáveis `DB_DATABASE`, `DB_PASSWORD` e `JWT_SECRET` no seu shell ou em um `.env` na raiz se quiser customizar.
+4. Acesse:
+   - API: http://localhost:3001
+   - MySQL exposto em: `localhost:3312`

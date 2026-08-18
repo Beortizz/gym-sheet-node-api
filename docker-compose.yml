@@ -1,0 +1,37 @@
+services:
+  app:
+    build: .
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    environment:
+      DATABASE_URL: mysql://root:${DB_PASSWORD:-root}@mysql:3306/${DB_DATABASE:-gym_sheet}
+      JWT_SECRET: ${JWT_SECRET:-devsecret}
+    ports:
+      - "3001:3000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks: [gym-sheet-node-api]
+
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-gym_sheet}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-root}
+    ports:
+      - "3312:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks: [gym-sheet-node-api]
+
+volumes:
+  dbdata:
+
+networks:
+  gym-sheet-node-api:
